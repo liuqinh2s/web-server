@@ -1,1 +1,1 @@
-Python
+Python web后端，使用flask框架，主要用于给我的量化交易机器人的可视化做后端服务
