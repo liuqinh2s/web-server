@@ -18,14 +18,15 @@ def hello_world():
 def register():
     apiKey = request.form.get('api-key')
     secretKey = request.form.get('secret-key')
-    notifyUid = request.form.get('notify-uid')
+    wxUid = request.form.get('wx-uid')
+    tgUid = request.form.get('tg-uid')
     quantity = request.form.get('quantity')
     leverage = request.form.get('leverage')
     contact = request.form.get('contact')
     username = request.form.get('contact')
 
     keys = 'register'
-    message = {"apiKey": apiKey, "secretKey": secretKey, "notifyUid": notifyUid, "quantity": quantity,
+    message = {"apiKey": apiKey, "secretKey": secretKey, "wxUid": wxUid, "tgUid": tgUid, "quantity": quantity,
                "leverage": leverage, 'contact': contact, 'username': username}
     channel.basic_publish(
         exchange="",
@@ -36,9 +37,52 @@ def register():
     return 'register success!'
 
 
+@app.route('/controller', methods=["POST"])
+def controller():
+    res = json.loads(request.data)
+    wxUid = res['wxUid']
+
+    keys = 'stop'
+    message = {"wxUid": wxUid}
+    channel.basic_publish(
+        exchange="",
+        routing_key=keys,
+        body=json.dumps(message)
+    )
+    print("send %s  %s" % (keys, message))
+    return 'stop success!'
+
+
 @app.route('/stop', methods=["POST"])
 def stop():
-    pass
+    res = json.loads(request.data)
+    wxUid = res['wxUid']
+
+    keys = 'stop'
+    message = {"wxUid": wxUid}
+    channel.basic_publish(
+        exchange="",
+        routing_key=keys,
+        body=json.dumps(message)
+    )
+    print("send %s  %s" % (keys, message))
+    return 'stop success!'
+
+
+@app.route('/start', methods=["POST"])
+def start():
+    res = json.loads(request.data)
+    wxUid = res['wxUid']
+
+    keys = 'start'
+    message = {"wxUid": wxUid}
+    channel.basic_publish(
+        exchange="",
+        routing_key=keys,
+        body=json.dumps(message)
+    )
+    print("send %s  %s" % (keys, message))
+    return 'start success!'
 
 
 if __name__ == '__main__':
